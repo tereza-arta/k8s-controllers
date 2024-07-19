@@ -1,0 +1,35 @@
+#Since we are dealing with a private docker repository,
+#I previously created a secret type <docker-registry> 
+#and moved it to the <imagePullSecrets> attribute
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dep-pod
+  minReadySeconds: 10
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      name: dep-pod
+      labels:
+        app: dep-pod
+    spec:
+      containers:
+      - name: node-app
+        image: terezabisharyan/node-app:v1
+        readinessProbe:
+          periodSeconds: 1
+          httpGet:
+            path: /
+            port: 8080
+      imagePullSecrets:
+      - name: reg-cred

@@ -1,0 +1,25 @@
+#We can track the work of Cronjob using the following command
+#kubectl get cj --watch
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hello-msg
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            some-label: cj-pod
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: cj-cnt
+            image: busybox
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - echo "Hello from Kubernetes clister"

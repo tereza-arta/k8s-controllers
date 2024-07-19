@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-sts
+spec:
+  selector:
+    matchLabels:
+      app: sts
+  serviceName: headless
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: sts
+    spec:
+      containers:
+      - name: kubia-cnt
+        image: terezabisharyan/kubia-pet
+        ports:
+        - name: http
+          containerPort: 8080
+        volumeMounts:
+        - name: data
+          mountPath: var/data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      resources:
+        requests:
+          storage: 1Mi
+      accessModes:
+      - ReadWriteOnce

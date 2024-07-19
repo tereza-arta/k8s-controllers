@@ -1,0 +1,22 @@
+#In the <spec> section, we can add <completion> 
+#and <parallelism> attributes to run more than 1
+#pods simultaneously or sequentially
+
+#We can track the work of Job using the following command
+#kubectl get job --watch
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: simple-job
+spec:
+  template:
+    metadata:
+      labels:
+        app: job
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: job
+        image: alpine
+        command: ["echo", "Message from job"]
